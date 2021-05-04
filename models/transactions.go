@@ -20,6 +20,14 @@ const TRANSACTION_STATUS_DELIVERED = "DELIVERED"
 
 const TRANSACTION_COLLECTION_NAME = "transactions"
 
+type Transaction struct {
+	Id      primitive.ObjectID `json:"id"`
+	Status  string             `json:"status"`
+	OrderId string             `json:"orderId"`
+	UserId  string             `json:"userId"`
+	Amount  float32            `json:"amount"`
+}
+
 func (model Transaction) Create(input forms.CreateTransaction) (primitive.ObjectID, error) {
 	var amount float32
 	for _, v := range input.Products {
