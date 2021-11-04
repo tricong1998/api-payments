@@ -18,7 +18,7 @@ import (
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Access-token
-// @host localhost:8081
+// @host localhost:8082
 // @BasePath /api
 func initRoute() *gin.Engine {
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
@@ -30,7 +30,7 @@ func initRoute() *gin.Engine {
 	api := route.Group("api")
 	{
 		api.Use(middlewares.Authenticate())
-		orders := api.Group("orders")
+		orders := api.Group("backend/transactions")
 		{
 			order := new(controllers.BackendTransactionController)
 			orders.POST("", order.Create)
@@ -39,7 +39,7 @@ func initRoute() *gin.Engine {
 		}
 	}
 
-	url := ginSwagger.URL("http://localhost:8081/swagger/doc.json") // The url pointing to API definition
+	url := ginSwagger.URL("http://localhost:8082/swagger/doc.json") // The url pointing to API definition
 	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	return route
 }

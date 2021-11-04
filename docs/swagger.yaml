@@ -1,13 +1,19 @@
 basePath: /api
 definitions:
-  forms.CreateOrder:
+  forms.CreateTransaction:
     properties:
-      product:
+      id:
+        type: string
+      products:
         items:
           $ref: '#/definitions/forms.Product'
         type: array
+      status:
+        type: string
+      userId:
+        type: string
     required:
-    - product
+    - products
     type: object
   forms.Product:
     properties:
@@ -22,29 +28,20 @@ definitions:
     - name
     - price
     type: object
-  models.Order:
+  models.Transaction:
     properties:
+      amount:
+        type: number
       id:
         type: string
-      products:
-        items:
-          $ref: '#/definitions/models.Product'
-        type: array
+      orderId:
+        type: string
       status:
         type: string
       userId:
         type: string
     type: object
-  models.Product:
-    properties:
-      amount:
-        type: integer
-      name:
-        type: string
-      price:
-        type: number
-    type: object
-host: localhost:8081
+host: localhost:8082
 info:
   contact: {}
   description: api-payments
@@ -52,19 +49,19 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
-  /orders:
+  /backend/transactions:
     post:
       consumes:
       - application/json
-      description: Create an order with status Created
-      operationId: api-payments-create-order
+      description: Create an transaction with status Created
+      operationId: api-payments-create-transaction
       parameters:
       - description: Add Product
         in: body
         name: user
         required: true
         schema:
-          $ref: '#/definitions/forms.CreateOrder'
+          $ref: '#/definitions/forms.CreateTransaction'
       produces:
       - application/json
       responses:
@@ -74,15 +71,15 @@ paths:
             type: string
       security:
       - ApiKeyAuth: []
-      summary: Create an order
+      summary: Create an transaction
       tags:
-      - orders
-  /orders/{id}:
+      - transactions
+  /backend/transactions/{id}:
     get:
       consumes:
       - application/json
-      description: Get an created order
-      operationId: api-payments-read-order
+      description: Get an created transaction
+      operationId: api-payments-read-transaction
       parameters:
       - description: id
         in: path
@@ -95,18 +92,18 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Order'
+            $ref: '#/definitions/models.Transaction'
       security:
       - ApiKeyAuth: []
-      summary: Find an order
+      summary: Find an transaction
       tags:
-      - orders
-  /orders/{id}/cancel:
+      - transactions
+  /backend/transactions/{id}/cancel:
     post:
       consumes:
       - application/json
-      description: Get an created order
-      operationId: api-payments-cancel-order
+      description: Get an created transaction
+      operationId: api-payments-cancel-transaction
       parameters:
       - description: id
         in: path
@@ -119,12 +116,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Order'
+            $ref: '#/definitions/models.Transaction'
       security:
       - ApiKeyAuth: []
-      summary: Cancel an order
+      summary: Cancel an transaction
       tags:
-      - orders
+      - transactions
 securityDefinitions:
   ApiKeyAuth:
     in: header

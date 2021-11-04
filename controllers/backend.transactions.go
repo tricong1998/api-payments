@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"api-payments/forms"
-	"api-payments/models"
 	"api-payments/services"
 	"net/http"
 
@@ -12,7 +11,7 @@ import (
 
 type BackendTransactionController struct{}
 
-var transactionModel = new(models.Transaction)
+var transactionModel = new(services.TransactionService)
 
 //
 // @ID api-payments-create-transaction
@@ -23,7 +22,7 @@ var transactionModel = new(models.Transaction)
 // @Produce  json
 // @Param user body forms.CreateTransaction true "Add Product"
 // @Success 200 {string} string	"id"
-// @Router /transactions [post]
+// @Router /backend/transactions [post]
 // @Security ApiKeyAuth
 func (controller BackendTransactionController) Create(c *gin.Context) {
 	var input forms.CreateTransaction
@@ -32,7 +31,7 @@ func (controller BackendTransactionController) Create(c *gin.Context) {
 		return
 	}
 
-	id, err := transactionModel.Create(input, user.UserId)
+	id, err := transactionModel.Create(input)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})
@@ -50,7 +49,7 @@ func (controller BackendTransactionController) Create(c *gin.Context) {
 // @Produce  json
 // @Param id path string true "id"
 // @Success 200 {object} models.Transaction
-// @Router /transactions/{id} [get]
+// @Router /backend/transactions/{id} [get]
 // @Security ApiKeyAuth
 func (controller BackendTransactionController) FindOne(c *gin.Context) {
 	user, _ := c.MustGet("User").(services.User)
@@ -83,11 +82,9 @@ func (controller BackendTransactionController) FindOne(c *gin.Context) {
 // @Produce  json
 // @Param id path string true "id"
 // @Success 200 {object} models.Transaction
-// @Router /transactions/{id}/cancel [post]
+// @Router /backend/transactions/{id}/cancel [post]
 // @Security ApiKeyAuth
 func (controller BackendTransactionController) Cancel(c *gin.Context) {
-	user, _ := c.MustGet("User").(services.User)
-
 	id := c.Param("id")
 	if !primitive.IsValidObjectID(id) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid id"})
@@ -96,7 +93,7 @@ func (controller BackendTransactionController) Cancel(c *gin.Context) {
 
 	transactionId, _ := primitive.ObjectIDFromHex(id)
 
-	transaction, err := transactionModel.Cancel(transactionId, user.UserId)
+	transaction, err := transactionModel.Cancel(transactionId)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err})

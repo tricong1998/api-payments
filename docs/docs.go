@@ -25,14 +25,14 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/orders": {
+        "/backend/transactions": {
             "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Create an order with status Created",
+                "description": "Create an transaction with status Created",
                 "consumes": [
                     "application/json"
                 ],
@@ -40,10 +40,10 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "orders"
+                    "transactions"
                 ],
-                "summary": "Create an order",
-                "operationId": "api-payments-create-order",
+                "summary": "Create an transaction",
+                "operationId": "api-payments-create-transaction",
                 "parameters": [
                     {
                         "description": "Add Product",
@@ -51,7 +51,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/forms.CreateOrder"
+                            "$ref": "#/definitions/forms.CreateTransaction"
                         }
                     }
                 ],
@@ -65,14 +65,14 @@ var doc = `{
                 }
             }
         },
-        "/orders/{id}": {
+        "/backend/transactions/{id}": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get an created order",
+                "description": "Get an created transaction",
                 "consumes": [
                     "application/json"
                 ],
@@ -80,10 +80,10 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "orders"
+                    "transactions"
                 ],
-                "summary": "Find an order",
-                "operationId": "api-payments-read-order",
+                "summary": "Find an transaction",
+                "operationId": "api-payments-read-transaction",
                 "parameters": [
                     {
                         "type": "string",
@@ -97,20 +97,20 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Order"
+                            "$ref": "#/definitions/models.Transaction"
                         }
                     }
                 }
             }
         },
-        "/orders/{id}/cancel": {
+        "/backend/transactions/{id}/cancel": {
             "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get an created order",
+                "description": "Get an created transaction",
                 "consumes": [
                     "application/json"
                 ],
@@ -118,10 +118,10 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "orders"
+                    "transactions"
                 ],
-                "summary": "Cancel an order",
-                "operationId": "api-payments-cancel-order",
+                "summary": "Cancel an transaction",
+                "operationId": "api-payments-cancel-transaction",
                 "parameters": [
                     {
                         "type": "string",
@@ -135,7 +135,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Order"
+                            "$ref": "#/definitions/models.Transaction"
                         }
                     }
                 }
@@ -143,17 +143,26 @@ var doc = `{
         }
     },
     "definitions": {
-        "forms.CreateOrder": {
+        "forms.CreateTransaction": {
             "type": "object",
             "required": [
-                "product"
+                "products"
             ],
             "properties": {
-                "product": {
+                "id": {
+                    "type": "string"
+                },
+                "products": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/forms.Product"
                     }
+                },
+                "status": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
                 }
             }
         },
@@ -176,37 +185,23 @@ var doc = `{
                 }
             }
         },
-        "models.Order": {
+        "models.Transaction": {
             "type": "object",
             "properties": {
+                "amount": {
+                    "type": "number"
+                },
                 "id": {
                     "type": "string"
                 },
-                "products": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Product"
-                    }
+                "orderId": {
+                    "type": "string"
                 },
                 "status": {
                     "type": "string"
                 },
                 "userId": {
                     "type": "string"
-                }
-            }
-        },
-        "models.Product": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "number"
                 }
             }
         }
@@ -232,7 +227,7 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0",
-	Host:        "localhost:8081",
+	Host:        "localhost:8082",
 	BasePath:    "/api",
 	Schemes:     []string{},
 	Title:       "Swagger Example API",

@@ -7,7 +7,7 @@ type Product struct {
 }
 
 type CreateTransaction struct {
-	Products []Product `json:"product" binding:"required"`
+	Products []Product `json:"products" binding:"required"`
 	Id       string    `json:"id"`
 	Status   string    `json:"status"`
 	UserId   string    `json:"userId"`
